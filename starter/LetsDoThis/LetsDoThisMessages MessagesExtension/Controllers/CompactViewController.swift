@@ -21,7 +21,7 @@ class CompactViewController: UIViewController {
     }
     
     @IBAction func onCreateTapped(_ sender: Any) {
-        // add code here
+        delegate.createRSVP()
     }
     
 }

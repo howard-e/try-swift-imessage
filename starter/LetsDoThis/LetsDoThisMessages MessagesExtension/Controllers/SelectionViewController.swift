@@ -24,19 +24,24 @@ class SelectionViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // add code here
+        setDefaults()
     }
     
     func setDefaults() {
-        // add code here
+		if let date = event.date { lblDate.text = date }
+		if let image = event.image { imgEvent.image = UIImage(named: image) }
+		
+		lblTitle.text = event.title
     }
     
     
     @IBAction func onYesTapped(_ sender: Any) {
-        // add code here
+        event.attending += 1
+		delegate.userWillAttend(with: event)
     }
     
     @IBAction func onNoTapped(_ sender: Any) {
-        // add code here
+        event.notAttending += 1
+		delegate.userWillNotAttend(with: event)
     }
 }

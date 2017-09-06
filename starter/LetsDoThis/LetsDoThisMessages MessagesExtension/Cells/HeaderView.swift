@@ -22,6 +22,6 @@ class HeaderView: UICollectionReusableView, HeaderItemViewProtocol {
     }
     
     func set(title: String) {
-        // add code here
+        lblTitle.text = title
     }
 }

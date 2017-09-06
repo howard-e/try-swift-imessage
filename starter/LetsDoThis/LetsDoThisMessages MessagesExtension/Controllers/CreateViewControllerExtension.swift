@@ -10,49 +10,86 @@ import Foundation
 
 extension CreateViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 0
+        return data[section].items.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 0
+        return data.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // add code here
-        return UICollectionViewCell()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "eventCell", for: indexPath) as! EventCell
+		let item = data[indexPath.section].items[indexPath.row]
+		
+		var borderColor = UIColor.clear.cgColor
+		var borderWidth: CGFloat = 0
+		
+		if indexPath == selectedIndexPath {
+			borderColor = #colorLiteral(red: 1, green: 0.1264993548, blue: 0.3636074364, alpha: 1).cgColor
+			borderWidth = 3
+		} else {
+			borderColor = UIColor.clear.cgColor
+			borderWidth = 0
+		}
+		
+		cell.layer.borderWidth = borderWidth
+		cell.layer.borderColor = borderColor
+		
+		cell.set(image: item)
+		
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // add code here
-        return CGSize(width: 0, height: 0)
+		
+		let screenRect = UIScreen.main.bounds
+		let screenWidth = screenRect.size.width - 21
+		let cellWidth = screenWidth / 2.0
+		
+        return CGSize(width: cellWidth, height: 120)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        // add code here
-        return CGSize(width: 0, height: 0)
+		
+		let screenRect = UIScreen.main.bounds
+		
+        return CGSize(width: screenRect.size.width, height: 40)
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        // add code here
-        return UICollectionReusableView()
+		
+		let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerView", for: indexPath) as! HeaderView
+		
+		setContentHeaderToView(view: headerView, index: indexPath)
+		
+        return headerView
     }
     
     func setContentHeaderToView(view: HeaderItemViewProtocol, index: IndexPath) {
-        // add code here
+        let name = data[index.section].name
+		view.set(title: name)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // add code here
+        let image = data[indexPath.section].items[indexPath.row]
+		selectedIndexPath = indexPath
+		
+		updateEvent(image: image)
     }
 }
 
 extension CreateViewController: FSCalendarDelegate, FSCalendarDataSource {
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        // add code here
+		updateEvent(date: self.formatter.string(from: date))
+		
+		if monthPosition == .previous || monthPosition == .next {
+			calendar.setCurrentPage(date, animated: true)
+		}
     }
     
     func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool) {
-        // add code here
+        self.calendarHeightConstraint.constant = bounds.height
+		self.view.layoutIfNeeded()
     }
 }

@@ -78,60 +78,134 @@ class CreateViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		
+		checkCurrentStep()
+		setupCollectionView()
     }
     
     func setupCollectionView() {
-        // add code here
+        let layout = UICollectionViewFlowLayout()
+		
+		layout.sectionInset = UIEdgeInsets(top: 7, left: 7, bottom: 7, right: 7)
+		layout.minimumInteritemSpacing = 7
+		layout.minimumLineSpacing = 7
+		
+		collectionView.collectionViewLayout = layout
+		collectionView.register(UINib(nibName: "HeaderView", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headerView")
+		
+		manager.fetch { (items) in
+			self.data = items
+			self.collectionView.reloadData()
+		}
     }
     
     
     
     func next() {
-        // add code here
+		if currentStep < 4 {
+			currentStep += 1
+		}
+		
+		checkCurrentStep()
     }
     
     func previous() {
-        // add code here
+		if currentStep > 1 {
+			currentStep -= 1
+		}
+		
+		checkCurrentStep()
     }
     
     func checkCurrentStep() {
-        // add code here
+		switch currentStep {
+		case 1:
+			stepTwoImg.image = UIImage(named: "unselected-step-bg")
+			stepTwoLine.backgroundColor = #colorLiteral(red: 1, green: 0.1264993548, blue: 0.3636074364, alpha: 1)
+			showStepOne()
+		case 2:
+			stepThreeImg.image = #imageLiteral(resourceName: "unselected-step-bg")
+			stepThreeLine.backgroundColor = #colorLiteral(red: 1, green: 0.1264993548, blue: 0.3636074364, alpha: 1)
+			showStepTwo()
+		case 3:
+			stepFourImg.image = #imageLiteral(resourceName: "unselected-step-bg")
+			stepFourLine.backgroundColor = #colorLiteral(red: 0.9086856246, green: 0.869707644, blue: 0.8658550382, alpha: 1)
+			showStepThree()
+		case 4:
+			showStepFour()
+		default:
+			print("not setup")
+		}
+		
+		lblStep.text = "\(currentStep)"
+		lblDesc.text = titles[currentStep - 1]
+		checkButtons()
     }
     
     func reset() {
-        // add code here
+        galleryView.isHidden = true
+		titleView.isHidden = true
+		calendarView.isHidden = true
+		confirmView.isHidden = true
     }
     
     func checkButtons() {
-        // add code here
+		if currentStep == 4 {
+			btnNext.setTitle("Send", for: .normal)
+		} else {
+			btnNext.setTitle("Next", for: .normal)
+		}
+		
+		if currentStep == 1 {
+			btnPrevious.isHidden = true
+		} else {
+			btnPrevious.isHidden = false
+		}
     }
     
     func showStepOne() {
-        // add code here
+        reset()
+		titleView.isHidden = false
     }
     
     func showStepTwo() {
-        // add code here
+        reset()
+		updateEventTitle()
+		stepTwoImg.image = #imageLiteral(resourceName: "selected-step-bg.pdf")
+		stepTwoLine.backgroundColor = #colorLiteral(red: 1, green: 0.1264993548, blue: 0.3636074364, alpha: 1)
+		galleryView.isHidden = false
     }
     
     func showStepThree() {
-        // add code here
+        reset()
+		stepThreeImg.image = #imageLiteral(resourceName: "selected-step-bg.pdf")
+		stepThreeLine.backgroundColor = #colorLiteral(red: 1, green: 0.1264993548, blue: 0.3636074364, alpha: 1)
+		calendarView.isHidden = false
     }
     
     func showStepFour() {
-        // add code here
+        reset()
+		
+		imgConfirm.image = UIImage(named: eventImage)
+		lblConfirmDate.text = "Date: \(eventDate)"
+		lblConfirmTitle.text = eventTitle
+		
+		stepFourImg.image = #imageLiteral(resourceName: "selected-step-bg.pdf")
+		stepFourLine.backgroundColor = #colorLiteral(red: 1, green: 0.1264993548, blue: 0.3636074364, alpha: 1)
+		confirmView.isHidden = false
     }
     
     func updateEventTitle() {
-        // add code here
+		guard let title = tfEventTitle.text else { return }
+		eventTitle = title
     }
     
     func updateEvent(image: String) {
-        // add code here
+        eventImage = image
     }
     
     func updateEvent(date: String) {
-        // add code here
+        eventDate = date
     }
     
     
@@ -139,11 +213,26 @@ class CreateViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func onNextTapped(_ sender: Any) {
-        // add code here
+		guard let title = btnNext.titleLabel?.text else { return }
+		
+		if title == "Next" {
+			next()
+		} else {
+			print("title \(eventTitle)")
+			print("image \(eventImage)")
+			print("date \(eventDate)")
+			
+			let event = Event()
+			event.date = eventDate
+			event.title = eventTitle
+			event.image = eventImage
+			
+			delegate.didCreate(with: event)
+		}
     }
     
     @IBAction func onPreviousTapped(_ sender: Any) {
-        // add code here
+        previous()
     }
 }
 

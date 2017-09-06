@@ -9,9 +9,10 @@
 import UIKit
 
 class EventCell: UICollectionViewCell {
+	
     @IBOutlet var imgThumb: UIImageView!
     
     func set(image:String) {
-        // add code here
+		imgThumb.image = UIImage(named: image)
     }
 }

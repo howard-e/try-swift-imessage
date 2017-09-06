@@ -685,13 +685,13 @@
         <image name="selected-step-bg" width="22" height="22"/>
         <image name="unselected-step-bg" width="22" height="22"/>
         <namedColor name="Primary Color">
-            <color red="0.23499999939999999" green="0.76899999379999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23499999940395355" green="0.76899999380111694" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="Primary Color Dark">
-            <color red="0.0" green="0.58399999141693115" blue="0.83499997854232788" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.58399999141693115" blue="0.83499997854232788" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="Secondary Color">
-            <color red="0.96499997380000002" green="0.25099998709999999" blue="0.3799999952" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.9649999737739563" green="0.25099998712539673" blue="0.37999999523162842" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>
